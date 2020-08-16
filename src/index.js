@@ -41,9 +41,11 @@ class TriviaApp extends React.Component {
       questions: [],
       idx: 0,
       score: 24,
-      gameOver: true,
+      gameOver: false,
       answeredCorrectly: 0,
-      leaderboard: []
+      leaderboard: [],
+      questionsAnswered: 0,
+      lost: false
     };
 
     this.fetchQuestions = this.fetchQuestions.bind(this);
@@ -51,6 +53,7 @@ class TriviaApp extends React.Component {
 
   componentDidMount = () => {
     this.fetchQuestions();
+    this.fetchLeaderboard();
   };
 
   fetchQuestions = () => {
@@ -108,8 +111,15 @@ class TriviaApp extends React.Component {
 
   handleAnswerClk = (questions, questionNumber, choice) => {
     const question = questions[questionNumber];
-    let { score, answeredCorrectly, gameOver } = this.state;
+    let {
+      score,
+      answeredCorrectly,
+      gameOver,
+      questionsAnswered,
+      lost
+    } = this.state;
     question.disabled = true;
+    questionsAnswered += 1;
     if (question.correct_answer === choice) {
       question.class = "correct";
       if (question.difficulty === "easy") score -= 2;
@@ -123,7 +133,18 @@ class TriviaApp extends React.Component {
       if (question.difficulty === "hard") score += 8;
     }
     if (score === 0) gameOver = true;
-    this.setState({ questions, score, answeredCorrectly, gameOver });
+    if (questionsAnswered > 9) {
+      lost = true;
+      gameOver = true;
+    }
+    this.setState({
+      questions,
+      score,
+      answeredCorrectly,
+      gameOver,
+      questionsAnswered,
+      lost
+    });
   };
 
   shuffleAnswers = (array) => {
@@ -135,17 +156,92 @@ class TriviaApp extends React.Component {
   };
 
   gameOver = () => {
-    let { answeredCorrectly } = this.state;
-    this.leaderboard();
+    let { answeredCorrectly, username, password, recorded, lost } = this.state;
+
     return (
       <div className="game-over">
-        <h1>Game Over!</h1>
+        <h1>{lost ? "You Lose" : "You Win!"}</h1>
         <h2>You answered {answeredCorrectly} Correctly!</h2>
+        <div className="game-over-container">
+          <div>
+            <div className="play-again-container">
+              <button onClick={this.newGame}>Play again</button>
+            </div>
+            <div className="login">
+              <h2 title="You can only submit your score if you beat the game!">
+                Submit Your Score
+              </h2>
+              <span className={recorded ? "success" : "hidden"}>
+                sucessfully submited**
+              </span>
+              <label>Username</label>
+              <input
+                disabled={lost}
+                type="text"
+                value={username}
+                title="You can only submit your score if you beat the game!"
+                onChange={this.handleChange("username")}
+              />
+              <label>Password</label>
+              <input
+                disabled={lost}
+                type="password"
+                title="You can only submit your score if you beat the game!"
+                value={password}
+                onChange={this.handleChange("password")}
+              />
+              <br />
+              <button onClick={this.handleSubmit} disabled={recorded || lost}>
+                Submit Score
+              </button>
+            </div>
+          </div>
+
+          <div className="leaderboard">
+            <h2>Leaderboard</h2>
+            {this.displayLeaderboard()}
+          </div>
+        </div>
       </div>
     );
   };
 
-  leaderboard = () => {
+  newGame = () => {
+    this.fetchQuestions();
+    this.setState({
+      username: "",
+      password: "",
+      score: 24,
+      answeredCorrectly: 0,
+      gameOver: false,
+      recorded: false,
+      questionsAnswered: 0,
+      lost: false
+    });
+  };
+
+  handleChange = (field) => {
+    return (e) => {
+      this.setState({ [field]: e.target.value });
+    };
+  };
+
+  handleSubmit = () => {
+    const { username, password, answeredCorrectly } = this.state;
+    db.collection("scores")
+      .doc(username)
+      .set({
+        username,
+        password,
+        score: answeredCorrectly,
+        date: new Date(Date.now())
+      })
+      .then(() => {
+        this.setState({ username: "", password: "", recorded: true });
+      });
+  };
+
+  fetchLeaderboard = () => {
     const leaderboard = [];
     db.collection("scores")
       .orderBy("score", "asc")
@@ -156,10 +252,22 @@ class TriviaApp extends React.Component {
           leaderboard.push(doc.data());
         });
       })
-      .then(
-        () => this.setState({ leaderboard }),
-        () => console.log(this.state.leaderboard)
+      .then(() => this.setState({ leaderboard }));
+  };
+
+  displayLeaderboard = (array = this.state.leaderboard) => {
+    return array.map((player, idx) => {
+      return (
+        <div key={idx} className="scores">
+          <h4>#{idx + 1}</h4>
+          <h4>Score: {player.score}</h4>
+          <h4>
+            {new Date(player.date.seconds * 1000).toLocaleDateString("en-US")}
+          </h4>
+          <h4>{player.username}</h4>
+        </div>
       );
+    });
   };
 
   render = () => {

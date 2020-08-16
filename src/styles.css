@@ -44,3 +44,60 @@ button:hover {
   align-items: center;
   flex-direction: column;
 }
+
+.scores {
+  display: flex;
+  flex-direction: row;
+}
+
+.scores > h4 {
+  margin: 10px 20px;
+}
+
+.leaderboard {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  flex-direction: column;
+}
+
+.success {
+  font-size: 8px;
+  color: green;
+}
+.hidden {
+  display: none;
+}
+
+.game-over-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* flex-direction: column; */
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login > label {
+  padding: 10px 0;
+}
+
+.play-again-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.play-again-container button {
+  padding: 10% 15%;
+  background-color: red;
+  box-sizing: border-box;
+  color: white;
+  font-weight: 700;
+}
