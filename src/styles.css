@@ -1,0 +1,46 @@
+body {
+  font-family: sans-serif;
+}
+
+.correct {
+  color: green;
+}
+
+.wrong {
+  color: red;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.answers {
+  padding: 5px 10px;
+}
+
+.score-board {
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  right: 10px;
+  top: 0;
+}
+
+.score-board p {
+  margin: 0;
+}
+
+.game-over {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
