@@ -26,16 +26,21 @@ button:hover {
 .score-board {
   /* background-color: red; */
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   position: absolute;
   right: 10px;
-  top: 0;
+  top: 100px;
+}
+
+.score-board span {
+  color: blue;
 }
 
 .score-board p {
-  margin: 0;
+  margin: 10px 0;
+  font-weight: 700;
 }
 
 .game-over {
@@ -56,9 +61,14 @@ button:hover {
 
 .leaderboard {
   display: flex;
-  /* justify-content: center; */
-  align-items: center;
+  justify-content: center;
   flex-direction: column;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+#leaderboard-title {
+  text-align: center;
 }
 
 .success {
@@ -71,9 +81,14 @@ button:hover {
 
 .game-over-container {
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   /* flex-direction: column; */
+  /* background-color: blue; */
+  box-sizing: content-box;
+}
+
+.game-over-left-container {
 }
 
 .login {
@@ -81,6 +96,10 @@ button:hover {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  box-sizing: content-box;
+  padding: 10px;
+
+  /* background-color: blue; */
 }
 
 .login > label {
@@ -100,4 +119,32 @@ button:hover {
   box-sizing: border-box;
   color: white;
   font-weight: 700;
+}
+
+.title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: blue;
+}
+
+.title {
+  color: white;
+}
+
+.prev-next-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.pagination > h5 {
+  color: lightgray;
+  margin: 1px;
 }

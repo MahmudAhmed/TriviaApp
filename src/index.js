@@ -69,11 +69,11 @@ class TriviaApp extends React.Component {
     return (
       <div>
         <div className="score-board">
-          <h2>
-            Score: <span>{score}</span>
-          </h2>
           <p>
-            You answered <span>{answeredCorrectly}</span> correctly...
+            Score: <span>{score}</span>
+          </p>
+          <p>
+            Answered Correctly: <span>{answeredCorrectly}</span>
           </p>
         </div>
         <div className="details">
@@ -163,7 +163,7 @@ class TriviaApp extends React.Component {
         <h1>{lost ? "You Lose" : "You Win!"}</h1>
         <h2>You answered {answeredCorrectly} Correctly!</h2>
         <div className="game-over-container">
-          <div>
+          <div className="game-over-left-container">
             <div className="play-again-container">
               <button onClick={this.newGame}>Play again</button>
             </div>
@@ -198,7 +198,7 @@ class TriviaApp extends React.Component {
           </div>
 
           <div className="leaderboard">
-            <h2>Leaderboard</h2>
+            <h2 id="leaderboard-title">Leaderboard</h2>
             {this.displayLeaderboard()}
           </div>
         </div>
@@ -278,8 +278,15 @@ class TriviaApp extends React.Component {
           this.gameOver()
         ) : (
           <div>
-            <h1>Welcome to TrustLayer Trivia!</h1>
+            <div className="title-container">
+              <h1 className="title">Welcome to TrustLayer Trivia!</h1>
+            </div>
             {this.displayQuestions()}
+            <div className="pagination">
+              <h5>
+                {idx + 1}/{questions.length}
+              </h5>
+            </div>
             <div className="prev-next-btns">
               {idx > 0 ? (
                 <button onClick={() => this.setState({ idx: idx - 1 })}>
